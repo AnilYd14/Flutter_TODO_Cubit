@@ -46,19 +46,21 @@ class TaskScreen extends StatelessWidget {
             Text('${context.watch<TaskCubit>().state.allTasks.length} Tasks',
                 style: const TextStyle(fontSize: 20, color: Colors.white)),
             const SizedBox(height: 20),
-            BlocBuilder<TaskCubit, TaskState>(builder: (context, state) {
-              return Expanded(
-                child: Container(
-                  height: 300.0,
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20.0),
-                          topRight: Radius.circular(20.0))),
-                  child: TaskList(state.allTasks),
+            Expanded(
+              child: Container(
+                height: 300.0,
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0))),
+                child: BlocBuilder<TaskCubit,TaskState>(
+                  builder: (context,state) {
+                    return TaskList(state.allTasks);
+                  }
                 ),
-              );
-            })
+              ),
+            )
           ],
         ),
       ),
