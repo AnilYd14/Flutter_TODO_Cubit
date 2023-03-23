@@ -14,8 +14,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<TaskCubit>(create: (_)=>TaskCubit(),
-       child: MaterialApp(home: TaskScreen(),),
+    return BlocProvider<TaskCubit>(
+      create: (_) => TaskCubit(),
+      child: MaterialApp(home: TaskScreen()),
     );
   }
 }

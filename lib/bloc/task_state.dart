@@ -1,20 +1,31 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../task.dart';
 
-class TaskState extends Equatable {
+@immutable
+abstract class TaskState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class InitialState extends TaskState {}
+
+class AddedState extends TaskState {
   final List<Task> allTasks;
 
-  const TaskState({this.allTasks = const <Task>[]});
+  AddedState({required this.allTasks});
 
   @override
   List<Object?> get props => [allTasks];
 
-  TaskState copyWith({
-    List<Task>? taskList,
-  }) {
-    return TaskState(
-      allTasks: taskList ?? allTasks,
-    );
+  AddedState copyWith(List<Task>? taskList) {
+    return AddedState(allTasks: taskList ?? allTasks);
   }
+}
+
+class ToDoErrorState extends TaskState {
+  final String errorString;
+
+  ToDoErrorState(this.errorString);
 }

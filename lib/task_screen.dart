@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_cubit/bloc/task_state.dart';
+import 'package:todo_cubit/task.dart';
 import 'package:todo_cubit/tasks_list.dart';
 
 import 'add_task_screen.dart';
 import 'bloc/task_cubit.dart';
 
 class TaskScreen extends StatelessWidget {
-  final List<String> tasks = [];
-
-  TaskScreen({super.key});
+  const TaskScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<TaskCubit>().state;
+    List<Task> list = [];
+    if (state is AddedState) {
+      list = state.allTasks;
+    }
     return Scaffold(
       backgroundColor: Colors.blueAccent,
       floatingActionButton: FloatingActionButton(
@@ -20,6 +24,7 @@ class TaskScreen extends StatelessWidget {
         onPressed: () {
           showModalBottomSheet(
               context: context,
+              isScrollControlled: true,
               builder: (context) => AddTaskScreen((newTextTile) {
                     BlocProvider.of<TaskCubit>(context).addTask(newTextTile);
 
@@ -43,7 +48,7 @@ class TaskScreen extends StatelessWidget {
               "TODO",
               style: TextStyle(fontSize: 30, color: Colors.white),
             ),
-            Text('${context.watch<TaskCubit>().state.allTasks.length} Tasks',
+            Text('${list.length} Tasks',
                 style: const TextStyle(fontSize: 20, color: Colors.white)),
             const SizedBox(height: 20),
             Expanded(
@@ -54,11 +59,13 @@ class TaskScreen extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20.0),
                         topRight: Radius.circular(20.0))),
-                child: BlocBuilder<TaskCubit,TaskState>(
-                  builder: (context,state) {
+                child: BlocBuilder<TaskCubit, TaskState>(
+                    builder: (context, state) {
+                  if (state is AddedState) {
                     return TaskList(state.allTasks);
                   }
-                ),
+                  return TaskList(list);
+                }),
               ),
             )
           ],

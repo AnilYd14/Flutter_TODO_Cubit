@@ -4,10 +4,22 @@ import 'package:todo_cubit/bloc/task_state.dart';
 import '../task.dart';
 
 class TaskCubit extends Cubit<TaskState> {
-  TaskCubit() : super(const TaskState());
+  TaskCubit() : super(InitialState());
 
   void addTask(String newTextTitle) {
-    final taskList = [...state.allTasks, Task(taskTitle: newTextTitle)];
-    emit(state.copyWith(taskList: taskList));
+    if (newTextTitle.isEmpty) {
+      emit(ToDoErrorState('error'));
+    }
+    final currentState = state;
+    if (currentState is AddedState) {
+      final taskList = [
+        ...currentState.allTasks,
+        Task(taskTitle: newTextTitle)
+      ];
+      emit(currentState.copyWith(taskList));
+    } else if (currentState is InitialState) {
+      final List<Task> list = [Task(taskTitle: newTextTitle)];
+      emit(AddedState(allTasks: list));
+    }
   }
 }
